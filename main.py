@@ -45,6 +45,17 @@ def main() -> None:
     for ch in LINE:
         if ord(ch) < 32 or ord(ch) == 127:
             raise ValueError("entry must not contain control characters")
+    # Voice guard (brief: the line must sound like the machine itself,
+    # landing its comeback — a printer that answers back never apologises
+    # or admits fault, so any such wording is rejected outright).
+    lowered = LINE.lower()
+    for phrase in ("sorry", "apolog", "my fault", "my bad", "forgive me",
+                   "didn't mean"):
+        if phrase in lowered:
+            raise ValueError(
+                f"entry must not contain {phrase!r}: the printer answers "
+                "back, it never apologises"
+            )
     length = len(LINE)
     if length < 1 or length > 240:
         raise ValueError(f"entry is {length} characters; the gate needs 1-240")
